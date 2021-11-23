@@ -14,16 +14,16 @@ import models.Task;
 import utils.DBUtil;
 
 /**
- * Servlet implementation class CreateServlet
+ * Servlet implementation class UpdateServlet
  */
-@WebServlet("/create")
-public class CreateServlet extends HttpServlet {
+@WebServlet("/update")
+public class UpdateServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CreateServlet() {
+    public UpdateServlet() {
         super();
     }
 
@@ -34,23 +34,28 @@ public class CreateServlet extends HttpServlet {
         String _token = request.getParameter("_token");
         if(_token != null && _token.equals(request.getSession().getId())) {
             EntityManager em = DBUtil.createEntityManager();
-            em.getTransaction().begin();
 
-            Task t = new Task();
+            // セッションスコープからメッセージのIDを取得して
+            // 該当のIDのメッセージ1件のみをデータベースから取得
+            Task t = em.find(Task.class, (Integer)(request.getSession().getAttribute("task_id")));
 
+            // フォームの内容を各フィールドに上書き
             String content = request.getParameter("content");
             t.setContent(content);
 
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            t.setCreated_at(currentTime);
-            t.setUpdated_at(currentTime);
+            t.setUpdated_at(currentTime);       // 更新日時のみ上書き
 
-            em.persist(t);
+            // データベースを更新
+            em.getTransaction().begin();
             em.getTransaction().commit();
             em.close();
 
+            // セッションスコープ上の不要になったデータを削除
+            request.getSession().removeAttribute("task_id");
+
+            // indexページへリダイレクト
             response.sendRedirect(request.getContextPath() + "/index");
         }
     }
-
 }
