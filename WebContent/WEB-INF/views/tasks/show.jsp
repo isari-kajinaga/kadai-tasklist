@@ -14,6 +14,15 @@
                             <td><c:out value="${task.content}" /></td>
                         </tr>
                         <tr>
+                            <th>期限</th>
+                            <fmt:parseDate value="${task.deadline}" pattern="yyyy-MM-dd" var="day" type="date" />
+                            <fmt:parseDate value="${task.deadline_time}" pattern="HH:mm" var="time" type="time" />
+                            <td>
+                                <fmt:formatDate value='${day}' pattern='yyyy-MM-dd' />
+                                <fmt:formatDate value='${time}' pattern='HH:mm' />
+                            </td>
+                        </tr>
+                        <tr>
                             <th>作成日時</th>
                             <td><fmt:formatDate value="${task.created_at}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
                         </tr>

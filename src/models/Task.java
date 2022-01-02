@@ -1,6 +1,8 @@
 package models;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,6 +32,12 @@ public class Task {
 
     @Column(name = "updated_at", nullable = false)
     private Timestamp updated_at;
+
+    @Column(name = "deadline", nullable = true)
+    private LocalDate deadline;
+
+    @Column(name = "deadline_time", nullable = true)
+    private LocalTime deadline_time;
 
     public Integer getId() {
         return id;
@@ -61,6 +69,22 @@ public class Task {
 
     public void setUpdated_at(Timestamp updated_at) {
         this.updated_at = updated_at;
+    }
+
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
+    }
+
+    public LocalTime getDeadline_time() {
+        return deadline_time;
+    }
+
+    public void setDeadline_time(LocalTime deadline_time) {
+        this.deadline_time = deadline_time;
     }
 }
 

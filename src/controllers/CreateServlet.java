@@ -2,6 +2,8 @@ package controllers;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -43,6 +45,12 @@ public class CreateServlet extends HttpServlet {
 
             String content = request.getParameter("content");
             t.setContent(content);
+
+            LocalDate deadline = LocalDate.parse(request.getParameter("deadline"));
+            t.setDeadline(deadline);
+
+            LocalTime deadline_time = LocalTime.parse(request.getParameter("deadline_time"));
+            t.setDeadline_time(deadline_time);
 
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
             t.setCreated_at(currentTime);
