@@ -15,12 +15,12 @@ import javax.persistence.Table;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "getAllTasks", query = "SELECT t FROM Task AS t ORDER BY t.deadline ASC, t.deadline_time ASC"),
-    @NamedQuery(name = "getAllTasksSort", query = "SELECT t FROM Task AS t ORDER BY t.id DESC"),
-    @NamedQuery(name = "getTasksCount", query = "SELECT COUNT(t) FROM Task AS t")
+    @NamedQuery(name = "getAllWorkTasks", query = "SELECT w FROM WorkTask AS w ORDER BY w.deadline ASC, w.deadline_time ASC"),
+    @NamedQuery(name = "getAllWorkTasksSort", query = "SELECT w FROM WorkTask AS w ORDER BY w.id DESC"),
+    @NamedQuery(name = "getWorkTasksCount", query = "SELECT COUNT(w) FROM WorkTask AS w")
 })
-@Table(name = "tasks")
-public class Task {
+@Table(name = "Worktasks")
+public class WorkTask {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

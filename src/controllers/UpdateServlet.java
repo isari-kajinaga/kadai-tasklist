@@ -2,8 +2,11 @@ package controllers;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -48,8 +51,14 @@ public class UpdateServlet extends HttpServlet {
             String content = request.getParameter("content");
             t.setContent(content);
 
-            LocalDate deadline = LocalDate.parse(request.getParameter("deadline"));
-            t.setDeadline(deadline);
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date deadline = dateFormat.parse(request.getParameter("deadline"));
+                t.setDeadline(deadline);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
 
             LocalTime deadline_time = LocalTime.parse(request.getParameter("deadline_time"));
             t.setDeadline_time(deadline_time);
@@ -73,7 +82,7 @@ public class UpdateServlet extends HttpServlet {
             // データベースを更新
             em.getTransaction().begin();
             em.getTransaction().commit();
-            request.getSession().setAttribute("flush", "登録が完了しました。");
+            request.getSession().setAttribute("flush", "更新が完了しました。");
             em.close();
 
             // セッションスコープ上の不要になったデータを削除

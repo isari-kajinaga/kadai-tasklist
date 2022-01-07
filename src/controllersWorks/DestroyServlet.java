@@ -1,4 +1,4 @@
-package controllers;
+package controllersWorks;
 
 import java.io.IOException;
 
@@ -9,13 +9,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.Task;
+import models.WorkTask;
 import utils.DBUtil;
 
 /**
  * Servlet implementation class DestroyServlet
  */
-@WebServlet("/destroy")
+@WebServlet("/workDestroy")
 public class DestroyServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -36,10 +36,10 @@ public class DestroyServlet extends HttpServlet {
 
             // セッションスコープからタスクのIDを取得して
             // 該当のIDのタスク1件のみをデータベースから取得
-            Task t = em.find(Task.class, (Integer)(request.getSession().getAttribute("task_id")));
+            WorkTask w = em.find(WorkTask.class, (Integer)(request.getSession().getAttribute("task_id")));
 
             em.getTransaction().begin();
-            em.remove(t);       // データ削除g
+            em.remove(w);       // データ削除
             em.getTransaction().commit();
             request.getSession().setAttribute("flush", "削除が完了しました。");
             em.close();
@@ -48,7 +48,7 @@ public class DestroyServlet extends HttpServlet {
             request.getSession().removeAttribute("task_id");
 
             // indexページへリダイレクト
-            response.sendRedirect(request.getContextPath() + "/index");
+            response.sendRedirect(request.getContextPath() + "/workIndex");
         }
     }
 

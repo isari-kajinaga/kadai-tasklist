@@ -1,4 +1,4 @@
-package controllers;
+package controllersWorks;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -16,14 +16,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.Task;
-import models.validatores.TaskValidatore;
+import models.WorkTask;
+import models.validatores.WorkTaskValidatore;
 import utils.DBUtil;
 
 /**
  * Servlet implementation class CreateServlet
  */
-@WebServlet("/create")
+@WebServlet("/workCreate")
 public class CreateServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -43,49 +43,49 @@ public class CreateServlet extends HttpServlet {
             EntityManager em = DBUtil.createEntityManager();
             em.getTransaction().begin();
 
-            Task t = new Task();
+            WorkTask w = new WorkTask();
 
             String content = request.getParameter("content");
-            t.setContent(content);
+            w.setContent(content);
 
 
             try {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 Date deadline = dateFormat.parse(request.getParameter("deadline"));
-                t.setDeadline(deadline);
+                w.setDeadline(deadline);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
 
             LocalTime deadline_time = LocalTime.parse(request.getParameter("deadline_time"));
-            t.setDeadline_time(deadline_time);
+            w.setDeadline_time(deadline_time);
 
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            t.setCreated_at(currentTime);
-            t.setUpdated_at(currentTime);
+            w.setCreated_at(currentTime);
+            w.setUpdated_at(currentTime);
 
             // バリデーションを実行してエラーがあったら新規登録のフォームに戻る
-            List<String> errors = TaskValidatore.validate(t);
+            List<String> errors = WorkTaskValidatore.validate(w);
             if(errors.size() > 0) {
                 em.close();
 
                 // フォームに初期値を設定、さらにエラーメッセージを送る
                 request.setAttribute("_token", request.getSession().getId());
-                request.setAttribute("task", t);
+                request.setAttribute("task", w);
                 request.setAttribute("errors", errors);
 
-                RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/tasks/new.jsp");
+                RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/WorkTasks/new.jsp");
                 rd.forward(request, response);
             } else {
 
 
-            em.persist(t);
+            em.persist(w);
             em.getTransaction().commit();
             request.getSession().setAttribute("flush", "登録が完了しました。");
             em.close();
 
-            response.sendRedirect(request.getContextPath() + "/index");
+            response.sendRedirect(request.getContextPath() + "/workIndex");
             }
         }
     }

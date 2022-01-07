@@ -8,9 +8,8 @@
                 <c:out value="${flush}"></c:out>
             </div>
         </c:if>
-        <h2>私用のタスク</h2>
 
-        <h3>期限３日以内のタスク</h3>
+        <h2>期限３日以内のタスク</h2>
 
         <table id="task_list">
             <tbody>
@@ -19,13 +18,13 @@
                     <th class="content">タスクの内容</th>
                     <th class="deadline">期限</th>
                 </tr>
-                <c:forEach var="task" items="${nearingTasks}" varStatus="status">
-                    <fmt:parseDate value="${task.deadline}" pattern="yyyy-MM-dd" var="day" type="date" />
-                    <fmt:parseDate value="${task.deadline_time}"  var="time" type="time"  timeStyle="short" />
+                <c:forEach var="workTask" items="${nearingWorkTasks}" varStatus="status">
+                    <fmt:parseDate value="${workTask.deadline}" pattern="yyyy-MM-dd" var="day" type="date" />
+                    <fmt:parseDate value="${workTask.deadline_time}"  var="time" type="time"  timeStyle="short" />
 
                     <tr class="row${status.count % 2}">
-                        <td class="id"><a href="${pageContext.request.contextPath}/show?id=${task.id}"><c:out value="${task.id}" /></a></td>
-                        <td class="content"><c:out value="${task.content}" /></td>
+                        <td class="id"><a href="${pageContext.request.contextPath}/workShow?id=${workTask.id}"><c:out value="${workTask.id}" /></a></td>
+                        <td class="content"><c:out value="${workTask.content}" /></td>
                         <td class="deadline">
                             <fmt:formatDate value='${day}' pattern='yyyy-MM-dd' />
                             <fmt:formatDate value='${time}'  type='time' timeStyle='short'  />
@@ -33,12 +32,12 @@
                     </tr>
                 </c:forEach>
             </tbody>
-        </table><br>
+        </table>
 
 
-        <h3>タスク一覧</h3>
+        <h2>タスク一覧</h2>
 
-        <p><a href="${pageContext.request.contextPath}/sort">作成順に並び替え</a></p>
+        <p><a href="${pageContext.request.contextPath}/workIndex">期限順に並び替え</a></p>
 
         <table id="task_list">
             <tbody>
@@ -47,13 +46,13 @@
                     <th class="content">タスクの内容</th>
                     <th class="deadline">期限</th>
                 </tr>
-                <c:forEach var="task" items="${tasks}" varStatus="status">
-                    <fmt:parseDate value="${task.deadline}" pattern="yyyy-MM-dd" var="day" type="date" />
-                    <fmt:parseDate value="${task.deadline_time}"  var="time" type="time"  timeStyle="short" />
+                <c:forEach var="workTask" items="${workTasks}">
+                    <fmt:parseDate value="${workTask.deadline}" pattern="yyyy-MM-dd" var="day" type="date" />
+                    <fmt:parseDate value="${workTask.deadline_time}"  var="time" type="time"  timeStyle="short" />
 
-                    <tr class="row${status.count % 2}">
-                        <td class="id"><a href="${pageContext.request.contextPath}/show?id=${task.id}"><c:out value="${task.id}" /></a></td>
-                        <td class="content"><c:out value="${task.content}" /></td>
+                    <tr class="row${workTasks_count}%2">
+                        <td class="id"><a href="${pageContext.request.contextPath}/workShow?id=${workTask.id}"><c:out value="${workTask.id}" /></a></td>
+                        <td class="content"><c:out value="${workTask.content}" /></td>
                         <td class="deadline">
                             <fmt:formatDate value='${day}' pattern='yyyy-MM-dd' />
                             <fmt:formatDate value='${time}'  type='time' timeStyle='short'  />
@@ -64,18 +63,18 @@
         </table>
 
         <div id="pagination">
-            （全 ${tasks_count} 件）<br />
-            <c:forEach var="i" begin="1" end="${((tasks_count - 1) / 15) + 1}" step="1">
+            （全 ${workTasks_count} 件）<br />
+            <c:forEach var="i" begin="1" end="${((workTasks_count - 1) / 15) + 1}" step="1">
                 <c:choose>
                     <c:when test="${i == page}">
                         <c:out value="${i}" />&nbsp;
                     </c:when>
                     <c:otherwise>
-                        <a href="${pageContext.request.contextPath}/index?page=${i}"><c:out value="${i}" /></a>&nbsp;
+                        <a href="${pageContext.request.contextPath}/workSort?page=${i}"><c:out value="${i}" /></a>&nbsp;
                     </c:otherwise>
                 </c:choose>
             </c:forEach>
         </div>
-        <p><a href="${pageContext.request.contextPath}/new">新規タスクの作成</a></p>
+        <p><a href="${pageContext.request.contextPath}/workNew">新規タスクの作成</a></p>
     </c:param>
 </c:import>

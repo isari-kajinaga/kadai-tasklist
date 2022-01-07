@@ -11,7 +11,9 @@
     <body>
         <div id="wrapper">
             <div id="header">
-                <h1>タスク管理　アプリケーション</h1>
+                    <h1>リマインダー</h1>&nbsp;&nbsp;&nbsp;
+                        <a href="/tasklist/index">私用タスク</a>&nbsp;&nbsp;
+                        <a href="/tasklist/workIndex">仕事用タスク</a>&nbsp;
             </div>
             <div id="content">
                 ${param.content}

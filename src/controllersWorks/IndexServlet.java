@@ -1,4 +1,4 @@
-package controllers;
+package controllersWorks;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -14,13 +14,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.Task;
+import models.WorkTask;
 import utils.DBUtil;
 
 /**
  * Servlet implementation class IndexServlet
  */
-@WebServlet("/index")
+@WebServlet("/workIndex")
 public class IndexServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -44,13 +44,13 @@ public class IndexServlet extends HttpServlet {
         } catch(NumberFormatException e) {}
 
         // 最大件数と開始位置を指定してメッセージを取得
-        List<Task> tasks = em.createNamedQuery("getAllTasks", Task.class)
+        List<WorkTask> workTasks = em.createNamedQuery("getAllWorkTasks", WorkTask.class)
                                    .setFirstResult(15 * (page - 1))
                                    .setMaxResults(15)
                                    .getResultList();
 
         // 全件数を取得
-        long tasks_count = (long)em.createNamedQuery("getTasksCount", Long.class)
+        long workTasks_count = (long)em.createNamedQuery("getWorkTasksCount", Long.class)
                                       .getSingleResult();
 
         // 期限３日以内のタスクを取得
@@ -59,7 +59,7 @@ public class IndexServlet extends HttpServlet {
         calendar.setTime(date);
         calendar.add(Calendar.DAY_OF_MONTH, 3);
         date = calendar.getTime();
-        List<Task> nearingTasks = em.createQuery("SELECT t FROM Task AS t WHERE t.deadline BETWEEN CURRENT_DATE AND :date ORDER BY t.deadline ASC, t.deadline_time ASC", Task.class)
+        List<WorkTask> nearingWorkTasks = em.createQuery("SELECT w FROM WorkTask AS w WHERE w.deadline BETWEEN CURRENT_DATE AND :date ORDER BY w.deadline ASC, w.deadline_time ASC", WorkTask.class)
                 .setParameter("date", date, TemporalType.DATE)
                 .setFirstResult(15 * (page - 1))
                 .setMaxResults(15)
@@ -68,9 +68,9 @@ public class IndexServlet extends HttpServlet {
 
         em.close();
 
-        request.setAttribute("tasks", tasks);
-        request.setAttribute("nearingTasks", nearingTasks);
-        request.setAttribute("tasks_count", tasks_count);     // 全件数
+        request.setAttribute("workTasks", workTasks);
+        request.setAttribute("nearingWorkTasks", nearingWorkTasks);
+        request.setAttribute("WorkTasks_count", workTasks_count);     // 全件数
         request.setAttribute("page", page);                         // ページ数
 
         // フラッシュメッセージがセッションスコープにセットされていたら
@@ -80,7 +80,7 @@ public class IndexServlet extends HttpServlet {
             request.getSession().removeAttribute("flush");
         }
 
-        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/tasks/index.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/workTasks/index.jsp");
         rd.forward(request, response);
     }
 

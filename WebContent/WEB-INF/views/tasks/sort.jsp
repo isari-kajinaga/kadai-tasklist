@@ -8,9 +8,8 @@
                 <c:out value="${flush}"></c:out>
             </div>
         </c:if>
-        <h2>私用のタスク</h2>
 
-        <h3>期限３日以内のタスク</h3>
+        <h2>期限３日以内のタスク</h2>
 
         <table id="task_list">
             <tbody>
@@ -33,12 +32,12 @@
                     </tr>
                 </c:forEach>
             </tbody>
-        </table><br>
+        </table>
 
 
-        <h3>タスク一覧</h3>
+        <h2>タスク一覧</h2>
 
-        <p><a href="${pageContext.request.contextPath}/sort">作成順に並び替え</a></p>
+        <p><a href="${pageContext.request.contextPath}/index">期限順に並び替え</a></p>
 
         <table id="task_list">
             <tbody>
@@ -47,11 +46,11 @@
                     <th class="content">タスクの内容</th>
                     <th class="deadline">期限</th>
                 </tr>
-                <c:forEach var="task" items="${tasks}" varStatus="status">
+                <c:forEach var="task" items="${tasks}">
                     <fmt:parseDate value="${task.deadline}" pattern="yyyy-MM-dd" var="day" type="date" />
                     <fmt:parseDate value="${task.deadline_time}"  var="time" type="time"  timeStyle="short" />
 
-                    <tr class="row${status.count % 2}">
+                    <tr class="row${tasks_count}%2">
                         <td class="id"><a href="${pageContext.request.contextPath}/show?id=${task.id}"><c:out value="${task.id}" /></a></td>
                         <td class="content"><c:out value="${task.content}" /></td>
                         <td class="deadline">
@@ -71,7 +70,7 @@
                         <c:out value="${i}" />&nbsp;
                     </c:when>
                     <c:otherwise>
-                        <a href="${pageContext.request.contextPath}/index?page=${i}"><c:out value="${i}" /></a>&nbsp;
+                        <a href="${pageContext.request.contextPath}/sort?page=${i}"><c:out value="${i}" /></a>&nbsp;
                     </c:otherwise>
                 </c:choose>
             </c:forEach>

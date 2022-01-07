@@ -3,15 +3,15 @@ package models.validatores;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.Task;
+import models.WorkTask;
 
-public class TaskValidatore {
+public class WorkTaskValidatore {
     // バリデーションを実行する
-    public static List<String> validate(Task t) {
+    public static List<String> validate(WorkTask w) {
         List<String> errors = new ArrayList<String>();
 
 
-        String content_error = validateContent(t.getContent());
+        String content_error = validateContent(w.getContent());
         if(!content_error.equals("")) {
             errors.add(content_error);
         }

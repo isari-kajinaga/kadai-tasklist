@@ -1,4 +1,4 @@
-package controllers;
+package controllersWorks;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -16,21 +16,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.Task;
-import models.validatores.TaskValidatore;
+import models.WorkTask;
+import models.validatores.WorkTaskValidatore;
 import utils.DBUtil;
 
 /**
- * Servlet implementation class CreateServlet
+ * Servlet implementation class UpdateServlet
  */
-@WebServlet("/create")
-public class CreateServlet extends HttpServlet {
+@WebServlet("/workUpdate")
+public class UpdateServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CreateServlet() {
+    public UpdateServlet() {
         super();
     }
 
@@ -41,53 +41,55 @@ public class CreateServlet extends HttpServlet {
         String _token = request.getParameter("_token");
         if(_token != null && _token.equals(request.getSession().getId())) {
             EntityManager em = DBUtil.createEntityManager();
-            em.getTransaction().begin();
 
-            Task t = new Task();
+            // セッションスコープからタスクのIDを取得して
+            // 該当のIDのタスク1件のみをデータベースから取得
+            WorkTask w = em.find(WorkTask.class, (Integer)(request.getSession().getAttribute("task_id")));
 
+            // フォームの内容を各フィールドに上書き
             String content = request.getParameter("content");
-            t.setContent(content);
-
+            w.setContent(content);
 
             try {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 Date deadline = dateFormat.parse(request.getParameter("deadline"));
-                t.setDeadline(deadline);
+                w.setDeadline(deadline);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
 
             LocalTime deadline_time = LocalTime.parse(request.getParameter("deadline_time"));
-            t.setDeadline_time(deadline_time);
+            w.setDeadline_time(deadline_time);
 
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            t.setCreated_at(currentTime);
-            t.setUpdated_at(currentTime);
+            w.setUpdated_at(currentTime);       // 更新日時のみ上書き
 
-            // バリデーションを実行してエラーがあったら新規登録のフォームに戻る
-            List<String> errors = TaskValidatore.validate(t);
+            // バリデーションを実行してエラーがあったら編集画面のフォームに戻る
+            List<String> errors = WorkTaskValidatore.validate(w);
             if(errors.size() > 0) {
                 em.close();
 
                 // フォームに初期値を設定、さらにエラーメッセージを送る
                 request.setAttribute("_token", request.getSession().getId());
-                request.setAttribute("task", t);
+                request.setAttribute("task", w);
                 request.setAttribute("errors", errors);
 
-                RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/tasks/new.jsp");
+                RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/workTasks/edit.jsp");
                 rd.forward(request, response);
             } else {
-
-
-            em.persist(t);
+            // データベースを更新
+            em.getTransaction().begin();
             em.getTransaction().commit();
-            request.getSession().setAttribute("flush", "登録が完了しました。");
+            request.getSession().setAttribute("flush", "更新が完了しました。");
             em.close();
 
-            response.sendRedirect(request.getContextPath() + "/index");
+            // セッションスコープ上の不要になったデータを削除
+            request.getSession().removeAttribute("task_id");
+
+            // indexページへリダイレクト
+            response.sendRedirect(request.getContextPath() + "/workIndex");
             }
         }
     }
-
 }

@@ -9,18 +9,18 @@
         </c:forEach>
     </div>
 </c:if>
-<fmt:parseDate value="${task.deadline}" pattern="yyyy-MM-dd" var="day" type="date" />
+<fmt:parseDate value="${workTask.deadline}" pattern="yyyy-MM-dd" var="day" type="date" />
 <label for="deadline">期限年月日</label><br />
 <input type="date" name="deadline" value="<fmt:formatDate value='${day}' pattern='yyyy-MM-dd' />" required />
 <br /><br />
 
-<fmt:parseDate value="${task.deadline_time}" pattern="HH:mm"  var="time" type="time" />
+<fmt:parseDate value="${workTask.deadline_time}" pattern="HH:mm"  var="time" type="time" />
 <label for="deadline_time">期限時刻</label><br />
-<input type="time" name="deadline_time" value="<fmt:formatDate value='${time}' type='time'  pattern='HH:mm'  />" required />
+<input type="time" name="deadline_time" value="<fmt:formatDate value='${time}' type='time'   pattern='HH:mm'  />" required />
 <br /><br />
 
 <label for="content">タスクの内容</label><br />
-<input type="text" name="content" value="${task.content}" />
+<input type="text" name="content" value="${workTask.content}" />
 
 <br /><br />
 
